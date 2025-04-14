@@ -32,7 +32,7 @@ public class ProjetoServiceTests
     [Fact]
     public async Task ObterTodosDoUsuarioAsync_DeveRetornarListaDeProjetos()
     {
-        // Arrange
+
         var usuarioId = Guid.NewGuid();
         var projetos = new List<Projeto>
         {
@@ -43,10 +43,10 @@ public class ProjetoServiceTests
         _projetoRepositoryMock.Setup(r => r.ObterTodosDoUsuarioAsync(usuarioId))
             .ReturnsAsync(projetos);
 
-        // Act
+
         var result = await _projetoService.ObterTodosDoUsuarioAsync(usuarioId);
 
-        // Assert
+
         Assert.Equal(2, result.Count());
         _projetoRepositoryMock.Verify(r => r.ObterTodosDoUsuarioAsync(usuarioId), Times.Once);
     }
@@ -54,7 +54,7 @@ public class ProjetoServiceTests
     [Fact]
     public async Task ObterPorIdAsync_QuandoProjetoExiste_DeveRetornarProjeto()
     {
-        // Arrange
+
         var projetoId = Guid.NewGuid();
         var usuarioId = Guid.NewGuid();
         var projeto = new Projeto("Projeto Teste", "Descrição", usuarioId) { };
@@ -62,10 +62,10 @@ public class ProjetoServiceTests
         _projetoRepositoryMock.Setup(r => r.ObterPorIdAsync(projetoId))
             .ReturnsAsync(projeto);
 
-        // Act
+
         var result = await _projetoService.ObterPorIdAsync(projetoId);
 
-        // Assert
+
         Assert.True(result.Sucesso);
         Assert.NotNull(result.Dados);
         Assert.Equal(projeto.Nome, result.Dados.Nome);
@@ -75,16 +75,16 @@ public class ProjetoServiceTests
     [Fact]
     public async Task ObterPorIdAsync_QuandoProjetoNaoExiste_DeveRetornarFalha()
     {
-        // Arrange
+
         var projetoId = Guid.NewGuid();
         
         _projetoRepositoryMock.Setup(r => r.ObterPorIdAsync(projetoId))
             .ReturnsAsync((Projeto)null);
 
-        // Act
+
         var result = await _projetoService.ObterPorIdAsync(projetoId);
 
-        // Assert
+
         Assert.False(result.Sucesso);
         Assert.Null(result.Dados);
         Assert.Equal("Projeto não encontrado.", result.Mensagem);
@@ -94,7 +94,7 @@ public class ProjetoServiceTests
     [Fact]
     public async Task CriarAsync_QuandoUsuarioExiste_DeveCriarProjeto()
     {
-        // Arrange
+
         var usuarioId = Guid.NewGuid();
         var dto = new CriarProjetoDTO
         {
@@ -109,10 +109,10 @@ public class ProjetoServiceTests
         _projetoRepositoryMock.Setup(r => r.AdicionarAsync(It.IsAny<Projeto>()))
             .ReturnsAsync((Projeto p) => p);
 
-        // Act
+
         var result = await _projetoService.CriarAsync(dto);
 
-        // Assert
+
         Assert.True(result.Sucesso);
         Assert.NotNull(result.Dados);
         Assert.Equal(dto.Nome, result.Dados.Nome);
@@ -125,7 +125,7 @@ public class ProjetoServiceTests
     [Fact]
     public async Task CriarAsync_QuandoUsuarioNaoExiste_DeveRetornarFalha()
     {
-        // Arrange
+
         var usuarioId = Guid.NewGuid();
         var dto = new CriarProjetoDTO
         {
@@ -137,10 +137,10 @@ public class ProjetoServiceTests
         _projetoRepositoryMock.Setup(r => r.UsuarioExisteAsync(usuarioId))
             .ReturnsAsync(false);
 
-        // Act
+
         var result = await _projetoService.CriarAsync(dto);
 
-        // Assert
+
         Assert.False(result.Sucesso);
         Assert.Null(result.Dados);
         Assert.Equal("Usuário não encontrado.", result.Mensagem);
@@ -151,7 +151,7 @@ public class ProjetoServiceTests
     [Fact]
     public async Task RemoverAsync_QuandoProjetoExisteESemTarefasPendentes_DeveRemoverProjeto()
     {
-        // Arrange
+
         var projetoId = Guid.NewGuid();
         var usuarioId = Guid.NewGuid();
         var projeto = new Projeto("Projeto Teste", "Descrição", usuarioId);
@@ -159,10 +159,10 @@ public class ProjetoServiceTests
         _projetoRepositoryMock.Setup(r => r.ObterPorIdAsync(projetoId))
             .ReturnsAsync(projeto);
 
-        // Act
+
         var result = await _projetoService.RemoverAsync(projetoId);
 
-        // Assert
+
         Assert.True(result.Sucesso);
         Assert.True(result.Dados);
         _projetoRepositoryMock.Verify(r => r.ObterPorIdAsync(projetoId), Times.Once);
@@ -172,16 +172,16 @@ public class ProjetoServiceTests
     [Fact]
     public async Task RemoverAsync_QuandoProjetoNaoExiste_DeveRetornarFalha()
     {
-        // Arrange
+
         var projetoId = Guid.NewGuid();
         
         _projetoRepositoryMock.Setup(r => r.ObterPorIdAsync(projetoId))
             .ReturnsAsync((Projeto)null);
 
-        // Act
+
         var result = await _projetoService.RemoverAsync(projetoId);
 
-        // Assert
+
         Assert.False(result.Sucesso);
         Assert.False(result.Dados);
         Assert.Equal("Projeto não encontrado.", result.Mensagem);

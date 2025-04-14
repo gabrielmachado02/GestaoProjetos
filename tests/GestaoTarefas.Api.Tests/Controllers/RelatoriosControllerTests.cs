@@ -21,7 +21,6 @@ public class RelatoriosControllerTests
     [Fact]
     public async Task GetMediaTarefasConcluidasPorUsuario_QuandoUsuarioGerente_DeveRetornarOk()
     {
-        // Arrange
         var media = 2.5;
         var usuarioId = Guid.NewGuid();
         
@@ -34,10 +33,8 @@ public class RelatoriosControllerTests
             UsuarioId = usuarioId
         };
 
-        // Act
         var result = await _controller.GetMediaTarefasConcluidasPorUsuario(request);
 
-        // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnedData = Assert.IsType<dynamic>(okResult.Value);
         
@@ -49,19 +46,14 @@ public class RelatoriosControllerTests
     [Fact]
     public async Task GetMediaTarefasConcluidasPorUsuario_QuandoUsuarioNaoGerente_DeveRetornarForbid()
     {
-        // Arrange
-        // Não configurar o serviço pois não deveria ser chamado
-        
         var request = new RelatorioRequestDTO
         {
             EhGerente = false,
             UsuarioId = Guid.NewGuid()
         };
 
-        // Act
         var result = await _controller.GetMediaTarefasConcluidasPorUsuario(request);
 
-        // Assert
         Assert.IsType<ForbidResult>(result.Result);
         _relatorioServiceMock.Verify(s => s.ObterMediaTarefasConcluidasPorUsuarioUltimos30DiasAsync(), Times.Never);
     }

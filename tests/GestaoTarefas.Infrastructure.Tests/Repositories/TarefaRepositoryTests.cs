@@ -19,13 +19,13 @@ public class TarefaRepositoryTests
     [Fact]
     public async Task ObterTodasDoProjeto_DeveRetornarTarefasDoProjeto()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var usuarioId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         var outroprojetoId = Guid.NewGuid();
 
-        // Criar algumas tarefas no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var projeto = new Projeto("Projeto Teste", "Descrição", usuarioId);
@@ -48,13 +48,13 @@ public class TarefaRepositoryTests
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new TarefaRepository(context);
             var tarefas = await repository.ObterTodasDoProjeto(projetoId);
 
-            // Assert
+
             Assert.Equal(2, tarefas.Count());
             Assert.All(tarefas, t => Assert.Equal(projetoId, t.ProjetoId));
         }
@@ -63,12 +63,12 @@ public class TarefaRepositoryTests
     [Fact]
     public async Task ObterPorIdAsync_QuandoTarefaExiste_DeveRetornarTarefa()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var projetoId = Guid.NewGuid();
         var tarefaId = Guid.NewGuid();
         
-        // Criar uma tarefa no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var tarefa = new Tarefa("Tarefa Teste", "Descrição", DateTime.Now.AddDays(1), PrioridadeTarefa.Media, projetoId);
@@ -78,13 +78,13 @@ public class TarefaRepositoryTests
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new TarefaRepository(context);
             var tarefaObtida = await repository.ObterPorIdAsync(tarefaId);
 
-            // Assert
+
             Assert.NotNull(tarefaObtida);
             Assert.Equal(tarefaId, tarefaObtida!.Id);
             Assert.Equal("Tarefa Teste", tarefaObtida.Titulo);
@@ -94,23 +94,23 @@ public class TarefaRepositoryTests
     [Fact]
     public async Task AdicionarAsync_DeveAdicionarERetornarTarefa()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var projetoId = Guid.NewGuid();
         var tarefa = new Tarefa("Nova Tarefa", "Descrição da nova tarefa", DateTime.Now.AddDays(5), PrioridadeTarefa.Alta, projetoId);
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new TarefaRepository(context);
             var tarefaAdicionada = await repository.AdicionarAsync(tarefa);
 
-            // Assert
+
             Assert.NotNull(tarefaAdicionada);
             Assert.Equal(tarefa.Id, tarefaAdicionada.Id);
             Assert.Equal("Nova Tarefa", tarefaAdicionada.Titulo);
             
-            // Verificar se foi salvo no contexto
+
             var tarefaSalva = await context.Tarefas.FindAsync(tarefa.Id);
             Assert.NotNull(tarefaSalva);
             Assert.Equal("Nova Tarefa", tarefaSalva!.Titulo);
@@ -120,12 +120,12 @@ public class TarefaRepositoryTests
     [Fact]
     public async Task RemoverAsync_QuandoTarefaExiste_DeveRemoverTarefa()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var projetoId = Guid.NewGuid();
         var tarefaId = Guid.NewGuid();
         
-        // Criar uma tarefa no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var tarefa = new Tarefa("Tarefa para Remover", "Descrição", DateTime.Now.AddDays(1), PrioridadeTarefa.Media, projetoId);
@@ -135,13 +135,13 @@ public class TarefaRepositoryTests
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new TarefaRepository(context);
             await repository.RemoverAsync(tarefaId);
             
-            // Assert
+
             var tarefaRemovida = await context.Tarefas.FindAsync(tarefaId);
             Assert.Null(tarefaRemovida);
         }
@@ -150,12 +150,12 @@ public class TarefaRepositoryTests
     [Fact]
     public async Task ContarTarefasDoProjetoAsync_DeveRetornarQuantidadeCorreta()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var usuarioId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         
-        // Criar algumas tarefas no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var projeto = new Projeto("Projeto Teste", "Descrição", usuarioId);
@@ -172,13 +172,13 @@ public class TarefaRepositoryTests
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new TarefaRepository(context);
             var quantidade = await repository.ContarTarefasDoProjetoAsync(projetoId);
 
-            // Assert
+
             Assert.Equal(5, quantidade);
         }
     }

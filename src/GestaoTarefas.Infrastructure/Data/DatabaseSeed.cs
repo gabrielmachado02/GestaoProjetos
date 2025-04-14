@@ -16,10 +16,8 @@ public static class DatabaseSeed
 
         try
         {
-            // Garantir que o banco de dados está criado e atualizado
             await dbContext.Database.MigrateAsync();
             
-            // Verificar se já existem dados no banco (para não semear novamente)
             if (await dbContext.Projetos.AnyAsync())
             {
                 logger.LogInformation("O banco de dados já está populado. Pulando seed.");
@@ -28,11 +26,9 @@ public static class DatabaseSeed
 
             logger.LogInformation("Iniciando seed do banco de dados...");
 
-            // Os IDs dos usuários já estão definidos no ApplicationDbContext
             var usuarioIdComum = Guid.Parse("11111111-1111-1111-1111-111111111111");
             var gerenteId = Guid.Parse("22222222-2222-2222-2222-222222222222");
 
-            // Criar projetos
             var projetoDesenvolvimento = new Projeto("Desenvolvimento Sistema", "Projeto para desenvolvimento do novo sistema de gestão", gerenteId);
             var projetoInfra = new Projeto("Infraestrutura", "Projeto para atualização da infraestrutura de servidores", gerenteId);
             var projetoPessoal = new Projeto("Tarefas Pessoais", "Organização de tarefas pessoais", usuarioIdComum);
@@ -40,7 +36,6 @@ public static class DatabaseSeed
             dbContext.Projetos.AddRange(projetoDesenvolvimento, projetoInfra, projetoPessoal);
             await dbContext.SaveChangesAsync();
 
-            // Criar tarefas para o projeto de desenvolvimento
             var tarefaAnalise = new Tarefa(
                 "Análise de requisitos", 
                 "Analisar e documentar todos os requisitos do novo sistema", 
@@ -64,7 +59,6 @@ public static class DatabaseSeed
                 
             dbContext.Tarefas.AddRange(tarefaAnalise, tarefaDesign, tarefaImplementacao);
             
-            // Criar tarefas para o projeto de infraestrutura
             var tarefaServidores = new Tarefa(
                 "Atualização de servidores", 
                 "Atualizar os servidores para a nova versão do sistema operacional", 
@@ -81,7 +75,6 @@ public static class DatabaseSeed
                 
             dbContext.Tarefas.AddRange(tarefaServidores, tarefaBackup);
             
-            // Criar tarefas para o projeto pessoal
             var tarefaEstudo = new Tarefa(
                 "Estudar .NET 8", 
                 "Concluir o curso de .NET 8 online", 
@@ -100,7 +93,6 @@ public static class DatabaseSeed
             
             await dbContext.SaveChangesAsync();
             
-            // Adicionar comentários às tarefas
             tarefaAnalise.AdicionarComentario("Reunião com stakeholders marcada para segunda-feira", gerenteId);
             tarefaAnalise.AdicionarComentario("Documento de requisitos inicial criado", usuarioIdComum);
             
@@ -108,7 +100,6 @@ public static class DatabaseSeed
             
             tarefaServidores.AdicionarComentario("Janela de manutenção aprovada para o próximo final de semana", gerenteId);
             
-            // Atualizar status de algumas tarefas
             tarefaAnalise.AtualizarStatus(StatusTarefa.EmAndamento, usuarioIdComum);
             tarefaDesign.AtualizarStatus(StatusTarefa.EmAndamento, usuarioIdComum);
             
