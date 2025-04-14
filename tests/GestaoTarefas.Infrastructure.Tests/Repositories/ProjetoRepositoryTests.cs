@@ -18,12 +18,12 @@ public class ProjetoRepositoryTests
     [Fact]
     public async Task ObterTodosDoUsuarioAsync_DeveRetornarProjetosDoUsuario()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var usuarioId = Guid.NewGuid();
         var outroUsuarioId = Guid.NewGuid();
 
-        // Criar alguns projetos no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var usuario = new Usuario("Teste", "teste@email.com");
@@ -33,18 +33,18 @@ public class ProjetoRepositoryTests
             
             context.Projetos.Add(new Projeto("Projeto 1", "Descrição 1", usuarioId));
             context.Projetos.Add(new Projeto("Projeto 2", "Descrição 2", usuarioId));
-            context.Projetos.Add(new Projeto("Projeto 3", "Descrição 3", outroUsuarioId)); // Projeto de outro usuário
+            context.Projetos.Add(new Projeto("Projeto 3", "Descrição 3", outroUsuarioId));
             
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new ProjetoRepository(context);
             var projetos = await repository.ObterTodosDoUsuarioAsync(usuarioId);
 
-            // Assert
+
             Assert.Equal(2, projetos.Count());
             Assert.All(projetos, p => Assert.Equal(usuarioId, p.UsuarioId));
         }
@@ -53,12 +53,12 @@ public class ProjetoRepositoryTests
     [Fact]
     public async Task ObterPorIdAsync_QuandoProjetoExiste_DeveRetornarProjeto()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var usuarioId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         
-        // Criar um projeto no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var projeto = new Projeto("Projeto Teste", "Descrição", usuarioId);
@@ -68,13 +68,13 @@ public class ProjetoRepositoryTests
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new ProjetoRepository(context);
             var projetoObtido = await repository.ObterPorIdAsync(projetoId);
 
-            // Assert
+
             Assert.NotNull(projetoObtido);
             Assert.Equal(projetoId, projetoObtido!.Id);
             Assert.Equal("Projeto Teste", projetoObtido.Nome);
@@ -84,23 +84,23 @@ public class ProjetoRepositoryTests
     [Fact]
     public async Task AdicionarAsync_DeveAdicionarERetornarProjeto()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var usuarioId = Guid.NewGuid();
         var projeto = new Projeto("Novo Projeto", "Descrição do novo projeto", usuarioId);
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new ProjetoRepository(context);
             var projetoAdicionado = await repository.AdicionarAsync(projeto);
 
-            // Assert
+
             Assert.NotNull(projetoAdicionado);
             Assert.Equal(projeto.Id, projetoAdicionado.Id);
             Assert.Equal("Novo Projeto", projetoAdicionado.Nome);
             
-            // Verificar se foi salvo no contexto
+
             var projetoSalvo = await context.Projetos.FindAsync(projeto.Id);
             Assert.NotNull(projetoSalvo);
             Assert.Equal("Novo Projeto", projetoSalvo!.Nome);
@@ -110,12 +110,12 @@ public class ProjetoRepositoryTests
     [Fact]
     public async Task RemoverAsync_QuandoProjetoExiste_DeveRemoverProjeto()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var usuarioId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         
-        // Criar um projeto no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var projeto = new Projeto("Projeto para Remover", "Descrição", usuarioId);
@@ -125,13 +125,13 @@ public class ProjetoRepositoryTests
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new ProjetoRepository(context);
             await repository.RemoverAsync(projetoId);
             
-            // Assert
+
             var projetoRemovido = await context.Projetos.FindAsync(projetoId);
             Assert.Null(projetoRemovido);
         }
@@ -140,11 +140,11 @@ public class ProjetoRepositoryTests
     [Fact]
     public async Task UsuarioExisteAsync_QuandoUsuarioExiste_DeveRetornarTrue()
     {
-        // Arrange
+
         var options = CreateNewContextOptions();
         var usuarioId = Guid.NewGuid();
         
-        // Criar um usuário no banco de dados em memória
+
         using (var context = new ApplicationDbContext(options))
         {
             var usuario = new Usuario("Teste", "teste@email.com");
@@ -154,13 +154,13 @@ public class ProjetoRepositoryTests
             await context.SaveChangesAsync();
         }
 
-        // Act
+
         using (var context = new ApplicationDbContext(options))
         {
             var repository = new ProjetoRepository(context);
             var resultado = await repository.UsuarioExisteAsync(usuarioId);
 
-            // Assert
+
             Assert.True(resultado);
         }
     }

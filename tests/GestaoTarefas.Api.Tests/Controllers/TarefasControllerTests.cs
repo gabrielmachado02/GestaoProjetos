@@ -22,7 +22,7 @@ public class TarefasControllerTests
     [Fact]
     public async Task GetTarefasDoProjeto_DeveRetornarOk_ComListaDeTarefas()
     {
-        // Arrange
+
         var projetoId = Guid.NewGuid();
         var tarefas = new List<TarefaDTO>
         {
@@ -33,10 +33,10 @@ public class TarefasControllerTests
         _tarefaServiceMock.Setup(s => s.ObterTodasDoProjetoAsync(projetoId))
             .ReturnsAsync(tarefas);
 
-        // Act
+
         var result = await _controller.GetTarefasDoProjeto(projetoId);
 
-        // Assert
+
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnedTarefas = Assert.IsAssignableFrom<IEnumerable<TarefaDTO>>(okResult.Value);
         Assert.Equal(2, returnedTarefas.Count());
@@ -45,7 +45,7 @@ public class TarefasControllerTests
     [Fact]
     public async Task GetTarefa_QuandoTarefaExiste_DeveRetornarOk_ComTarefa()
     {
-        // Arrange
+
         var tarefaId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         var tarefa = new TarefaDTO { Id = tarefaId, Titulo = "Tarefa Teste", ProjetoId = projetoId };
@@ -53,10 +53,10 @@ public class TarefasControllerTests
         _tarefaServiceMock.Setup(s => s.ObterPorIdAsync(tarefaId))
             .ReturnsAsync(ResultadoOperacao<TarefaDTO>.Sucedido(tarefa));
 
-        // Act
+
         var result = await _controller.GetTarefa(tarefaId);
 
-        // Assert
+
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnedTarefa = Assert.IsType<TarefaDTO>(okResult.Value);
         Assert.Equal(tarefaId, returnedTarefa.Id);
@@ -65,23 +65,23 @@ public class TarefasControllerTests
     [Fact]
     public async Task GetTarefa_QuandoTarefaNaoExiste_DeveRetornarNotFound()
     {
-        // Arrange
+
         var tarefaId = Guid.NewGuid();
         
         _tarefaServiceMock.Setup(s => s.ObterPorIdAsync(tarefaId))
             .ReturnsAsync(ResultadoOperacao<TarefaDTO>.Falha("Tarefa não encontrada."));
 
-        // Act
+
         var result = await _controller.GetTarefa(tarefaId);
 
-        // Assert
+
         Assert.IsType<NotFoundObjectResult>(result.Result);
     }
 
     [Fact]
     public async Task CriarTarefa_QuandoSucedido_DeveRetornarCreatedAtAction()
     {
-        // Arrange
+
         var dto = new CriarTarefaDTO
         {
             Titulo = "Nova Tarefa",
@@ -105,10 +105,10 @@ public class TarefasControllerTests
         _tarefaServiceMock.Setup(s => s.CriarAsync(dto))
             .ReturnsAsync(ResultadoOperacao<TarefaDTO>.Sucedido(tarefaCriada));
 
-        // Act
+
         var result = await _controller.CriarTarefa(dto);
 
-        // Assert
+
         var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
         var returnedTarefa = Assert.IsType<TarefaDTO>(createdAtActionResult.Value);
         Assert.Equal(tarefaCriada.Id, returnedTarefa.Id);
@@ -118,7 +118,7 @@ public class TarefasControllerTests
     [Fact]
     public async Task CriarTarefa_QuandoFalhado_DeveRetornarBadRequest()
     {
-        // Arrange
+
         var dto = new CriarTarefaDTO
         {
             Titulo = "Nova Tarefa",
@@ -131,17 +131,17 @@ public class TarefasControllerTests
         _tarefaServiceMock.Setup(s => s.CriarAsync(dto))
             .ReturnsAsync(ResultadoOperacao<TarefaDTO>.Falha("Erro ao criar tarefa."));
 
-        // Act
+
         var result = await _controller.CriarTarefa(dto);
 
-        // Assert
+
         Assert.IsType<BadRequestObjectResult>(result.Result);
     }
 
     [Fact]
     public async Task AtualizarTarefa_QuandoSucedido_DeveRetornarOk()
     {
-        // Arrange
+
         var dto = new AtualizarTarefaDTO
         {
             Id = Guid.NewGuid(),
@@ -165,10 +165,10 @@ public class TarefasControllerTests
         _tarefaServiceMock.Setup(s => s.AtualizarAsync(dto))
             .ReturnsAsync(ResultadoOperacao<TarefaDTO>.Sucedido(tarefaAtualizada));
 
-        // Act
+
         var result = await _controller.AtualizarTarefa(dto);
 
-        // Assert
+
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnedTarefa = Assert.IsType<TarefaDTO>(okResult.Value);
         Assert.Equal(dto.Id, returnedTarefa.Id);
@@ -178,7 +178,7 @@ public class TarefasControllerTests
     [Fact]
     public async Task AtualizarTarefa_QuandoFalhado_DeveRetornarBadRequest()
     {
-        // Arrange
+
         var dto = new AtualizarTarefaDTO
         {
             Id = Guid.NewGuid(),
@@ -192,33 +192,33 @@ public class TarefasControllerTests
         _tarefaServiceMock.Setup(s => s.AtualizarAsync(dto))
             .ReturnsAsync(ResultadoOperacao<TarefaDTO>.Falha("Tarefa não encontrada."));
 
-        // Act
+
         var result = await _controller.AtualizarTarefa(dto);
 
-        // Assert
+
         Assert.IsType<BadRequestObjectResult>(result.Result);
     }
 
     [Fact]
     public async Task RemoverTarefa_QuandoSucedido_DeveRetornarNoContent()
     {
-        // Arrange
+
         var tarefaId = Guid.NewGuid();
         
         _tarefaServiceMock.Setup(s => s.RemoverAsync(tarefaId))
             .ReturnsAsync(ResultadoOperacao<bool>.Sucedido(true));
 
-        // Act
+
         var result = await _controller.RemoverTarefa(tarefaId);
 
-        // Assert
+
         Assert.IsType<NoContentResult>(result);
     }
 
     [Fact]
     public async Task AdicionarComentario_QuandoSucedido_DeveRetornarOk()
     {
-        // Arrange
+
         var dto = new AdicionarComentarioDTO
         {
             TarefaId = Guid.NewGuid(),
@@ -245,10 +245,10 @@ public class TarefasControllerTests
         _tarefaServiceMock.Setup(s => s.AdicionarComentarioAsync(dto))
             .ReturnsAsync(ResultadoOperacao<TarefaDTO>.Sucedido(tarefaComComentario));
 
-        // Act
+
         var result = await _controller.AdicionarComentario(dto);
 
-        // Assert
+
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnedTarefa = Assert.IsType<TarefaDTO>(okResult.Value);
         Assert.Equal(dto.TarefaId, returnedTarefa.Id);

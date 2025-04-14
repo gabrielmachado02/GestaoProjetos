@@ -14,20 +14,17 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         
-        // Registrar serviços
         services.AddScoped<IProjetoService, ProjetoService>();
         services.AddScoped<ITarefaService, TarefaService>();
         services.AddScoped<IRelatorioService, RelatorioService>();
         
-        // Registrar validadores
         services.AddScoped<IValidator<RelatorioRequestDTO>, RelatorioRequestValidator>();
         services.AddScoped<IValidator<CriarProjetoDTO>, CriarProjetoValidator>();
         services.AddScoped<IValidator<CriarTarefaDTO>, CriarTarefaValidator>();
         services.AddScoped<IValidator<AtualizarTarefaDTO>, AtualizarTarefaValidator>();
         services.AddScoped<IValidator<AdicionarComentarioDTO>, AdicionarComentarioValidator>();
         
-        // Registrar validação automática para controllers
-        //services.AddFluentValidationAutoValidation();
+        services.AddFluentValidationAutoValidation();
         
         return services;
     }

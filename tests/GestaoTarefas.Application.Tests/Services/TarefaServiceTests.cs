@@ -35,7 +35,6 @@ public class TarefaServiceTests
     [Fact]
     public async Task ObterTodasDoProjetoAsync_DeveRetornarListaDeTarefas()
     {
-        // Arrange
         var projetoId = Guid.NewGuid();
         var tarefas = new List<Tarefa>
         {
@@ -46,10 +45,8 @@ public class TarefaServiceTests
         _tarefaRepositoryMock.Setup(r => r.ObterTodasDoProjeto(projetoId))
             .ReturnsAsync(tarefas);
 
-        // Act
         var result = await _tarefaService.ObterTodasDoProjetoAsync(projetoId);
 
-        // Assert
         Assert.Equal(2, result.Count());
         _tarefaRepositoryMock.Verify(r => r.ObterTodasDoProjeto(projetoId), Times.Once);
     }
@@ -57,7 +54,6 @@ public class TarefaServiceTests
     [Fact]
     public async Task ObterPorIdAsync_QuandoTarefaExiste_DeveRetornarTarefa()
     {
-        // Arrange
         var tarefaId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         var tarefa = new Tarefa("Tarefa Teste", "Descrição", DateTime.Now.AddDays(1), PrioridadeTarefa.Media, projetoId);
@@ -65,10 +61,8 @@ public class TarefaServiceTests
         _tarefaRepositoryMock.Setup(r => r.ObterPorIdAsync(tarefaId))
             .ReturnsAsync(tarefa);
 
-        // Act
         var result = await _tarefaService.ObterPorIdAsync(tarefaId);
 
-        // Assert
         Assert.True(result.Sucesso);
         Assert.NotNull(result.Dados);
         Assert.Equal(tarefa.Titulo, result.Dados.Titulo);
@@ -78,16 +72,13 @@ public class TarefaServiceTests
     [Fact]
     public async Task ObterPorIdAsync_QuandoTarefaNaoExiste_DeveRetornarFalha()
     {
-        // Arrange
         var tarefaId = Guid.NewGuid();
         
         _tarefaRepositoryMock.Setup(r => r.ObterPorIdAsync(tarefaId))
             .ReturnsAsync((Tarefa)null);
 
-        // Act
         var result = await _tarefaService.ObterPorIdAsync(tarefaId);
 
-        // Assert
         Assert.False(result.Sucesso);
         Assert.Null(result.Dados);
         Assert.Equal("Tarefa não encontrada.", result.Mensagem);
@@ -97,7 +88,6 @@ public class TarefaServiceTests
     [Fact]
     public async Task CriarAsync_QuandoProjetoExisteELimiteNaoExcedido_DeveCriarTarefa()
     {
-        // Arrange
         var projetoId = Guid.NewGuid();
         var usuarioId = Guid.NewGuid();
         var projeto = new Projeto("Projeto Teste", "Descrição", usuarioId);
@@ -115,15 +105,13 @@ public class TarefaServiceTests
             .ReturnsAsync(projeto);
         
         _tarefaRepositoryMock.Setup(r => r.ContarTarefasDoProjetoAsync(projetoId))
-            .ReturnsAsync(10); // Abaixo do limite de 20
+            .ReturnsAsync(10);
         
         _tarefaRepositoryMock.Setup(r => r.AdicionarAsync(It.IsAny<Tarefa>()))
             .ReturnsAsync((Tarefa t) => t);
 
-        // Act
         var result = await _tarefaService.CriarAsync(dto);
 
-        // Assert
         Assert.True(result.Sucesso);
         Assert.NotNull(result.Dados);
         Assert.Equal(dto.Titulo, result.Dados.Titulo);
@@ -138,7 +126,6 @@ public class TarefaServiceTests
     [Fact]
     public async Task CriarAsync_QuandoProjetoNaoExiste_DeveRetornarFalha()
     {
-        // Arrange
         var projetoId = Guid.NewGuid();
         
         var dto = new CriarTarefaDTO
@@ -153,10 +140,8 @@ public class TarefaServiceTests
         _projetoRepositoryMock.Setup(r => r.ObterPorIdAsync(projetoId))
             .ReturnsAsync((Projeto)null);
 
-        // Act
         var result = await _tarefaService.CriarAsync(dto);
 
-        // Assert
         Assert.False(result.Sucesso);
         Assert.Null(result.Dados);
         Assert.Equal("Projeto não encontrado.", result.Mensagem);
@@ -167,7 +152,6 @@ public class TarefaServiceTests
     [Fact]
     public async Task CriarAsync_QuandoLimiteExcedido_DeveRetornarFalha()
     {
-        // Arrange
         var projetoId = Guid.NewGuid();
         var usuarioId = Guid.NewGuid();
         var projeto = new Projeto("Projeto Teste", "Descrição", usuarioId);
@@ -185,12 +169,10 @@ public class TarefaServiceTests
             .ReturnsAsync(projeto);
         
         _tarefaRepositoryMock.Setup(r => r.ContarTarefasDoProjetoAsync(projetoId))
-            .ReturnsAsync(20); // No limite
+            .ReturnsAsync(20);
 
-        // Act
         var result = await _tarefaService.CriarAsync(dto);
 
-        // Assert
         Assert.False(result.Sucesso);
         Assert.Null(result.Dados);
         Assert.Contains("limite máximo", result.Mensagem);
@@ -202,7 +184,7 @@ public class TarefaServiceTests
     [Fact]
     public async Task AtualizarAsync_QuandoTarefaExiste_DeveAtualizarTarefa()
     {
-        // Arrange
+
         var tarefaId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         var usuarioId = Guid.NewGuid();
@@ -224,10 +206,10 @@ public class TarefaServiceTests
         _tarefaRepositoryMock.Setup(r => r.AtualizarAsync(It.IsAny<Tarefa>()))
             .Returns(Task.CompletedTask);
 
-        // Act
+
         var result = await _tarefaService.AtualizarAsync(dto);
 
-        // Assert
+
         Assert.True(result.Sucesso);
         Assert.NotNull(result.Dados);
         _tarefaRepositoryMock.Verify(r => r.ObterPorIdAsync(tarefaId), Times.Once);
@@ -237,7 +219,7 @@ public class TarefaServiceTests
     [Fact]
     public async Task RemoverAsync_QuandoTarefaExiste_DeveRemoverTarefa()
     {
-        // Arrange
+
         var tarefaId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
         var tarefa = new Tarefa("Tarefa Teste", "Descrição", DateTime.Now.AddDays(1), PrioridadeTarefa.Media, projetoId);
@@ -248,10 +230,10 @@ public class TarefaServiceTests
         _tarefaRepositoryMock.Setup(r => r.RemoverAsync(tarefaId))
             .Returns(Task.CompletedTask);
 
-        // Act
+
         var result = await _tarefaService.RemoverAsync(tarefaId);
 
-        // Assert
+
         Assert.True(result.Sucesso);
         Assert.True(result.Dados);
         _tarefaRepositoryMock.Verify(r => r.ObterPorIdAsync(tarefaId), Times.Once);
@@ -261,7 +243,7 @@ public class TarefaServiceTests
     [Fact]
     public async Task AdicionarComentarioAsync_QuandoTarefaExiste_DeveAdicionarComentario()
     {
-        // Arrange
+
         var tarefaId = Guid.NewGuid();
         var usuarioId = Guid.NewGuid();
         var projetoId = Guid.NewGuid();
@@ -280,10 +262,10 @@ public class TarefaServiceTests
         _tarefaRepositoryMock.Setup(r => r.AtualizarAsync(It.IsAny<Tarefa>()))
             .Returns(Task.CompletedTask);
 
-        // Act
+
         var result = await _tarefaService.AdicionarComentarioAsync(dto);
 
-        // Assert
+
         Assert.True(result.Sucesso);
         Assert.NotNull(result.Dados);
         _tarefaRepositoryMock.Verify(r => r.ObterPorIdAsync(tarefaId), Times.Once);

@@ -68,7 +68,6 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Conteudo).IsRequired().HasMaxLength(500);
         });
 
-        // Seed de usuário para testes
         modelBuilder.Entity<Usuario>().HasData(
             new Usuario("Usuário Teste", "usuario@teste.com", false) { Id = Guid.Parse("11111111-1111-1111-1111-111111111111") },
             new Usuario("Gerente Teste", "gerente@teste.com", true) { Id = Guid.Parse("22222222-2222-2222-2222-222222222222") }
