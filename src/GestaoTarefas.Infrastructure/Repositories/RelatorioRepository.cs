@@ -18,7 +18,7 @@ public class RelatorioRepository : IRelatorioRepository
     {
         var dataInicio = DateTime.UtcNow.AddDays(-30);
         
-        // Encontrar tarefas concluídas nos últimos 30 dias
+
         var tarefasConcluidas = await _context.Tarefas
             .Where(t => t.Status == StatusTarefa.Concluida)
             .Where(t => t.Alteracoes.Any(a => 
@@ -27,7 +27,7 @@ public class RelatorioRepository : IRelatorioRepository
                 a.DataAlteracao >= dataInicio))
             .ToListAsync();
             
-        // Agrupar tarefas por usuário e calcular a média
+
         var usuariosCount = await _context.Usuarios.CountAsync();
         
         if (usuariosCount == 0)

@@ -33,7 +33,7 @@ public class ProjetoRepositoryTests
             
             context.Projetos.Add(new Projeto("Projeto 1", "Descrição 1", usuarioId));
             context.Projetos.Add(new Projeto("Projeto 2", "Descrição 2", usuarioId));
-            context.Projetos.Add(new Projeto("Projeto 3", "Descrição 3", outroUsuarioId)); // Projeto de outro usuário
+            context.Projetos.Add(new Projeto("Projeto 3", "Descrição 3", outroUsuarioId));
             
             await context.SaveChangesAsync();
         }

@@ -68,7 +68,7 @@ public class TarefaTests
         var usuarioId = Guid.NewGuid();
         var titulo = "Tarefa Teste";
         var descricao = "Descrição da tarefa";
-        var dataVencimento = DateTime.Now.AddDays(1).Date; // Removendo componente de hora para comparação
+        var dataVencimento = DateTime.Now.AddDays(1).Date;
         var tarefa = new Tarefa(titulo, descricao, dataVencimento, PrioridadeTarefa.Media, projetoId);
 
 
