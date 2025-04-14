@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=gestaotarefas;Username=postgres;Password=postgres
+    volumes:
+      - ./src:/app/src
+    networks:
+      - gestaotarefas-network
+
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gestaotarefas
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./src/GestaoTarefas.Infrastructure/Data/Migrations/init.sh:/docker-entrypoint-initdb.d/init.sh
+    networks:
+      - gestaotarefas-network
+
+networks:
+  gestaotarefas-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
